@@ -1,7 +1,7 @@
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
-from core.exceptions import EmailExistsException, PasswordLengthException
+from core.exceptions import EmailExistsException, PasswordLengthException, InvalidPasswordConfirmException
 
 
 async def email_exists_exception_handler(_: Request, exc: EmailExistsException):
@@ -24,8 +24,19 @@ async def password_length_exception_handler(_: Request, exc: PasswordLengthExcep
     )
 
 
+async def invalid_password_confirm_exception_handler(_: Request, exc: InvalidPasswordConfirmException):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={
+            "message": f"Invalid password confirm",
+            "error": InvalidPasswordConfirmException.__name__
+        },
+    )
+
+
 def get_exception_handlers():
     return [
         (EmailExistsException, email_exists_exception_handler),
         (PasswordLengthException, password_length_exception_handler),
+        (InvalidPasswordConfirmException, invalid_password_confirm_exception_handler)
     ]

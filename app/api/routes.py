@@ -21,8 +21,9 @@ async def sign_in(db: Session = Depends(get_db)):
 async def sign_up(request: SignUpUserRequestPayload, db: Session = Depends(get_db)):
     email = request.email
     password = request.password
+    password_confirm = request.password_confirm
     
-    new_user = sign_up_controller(db, email, password)
+    new_user = sign_up_controller(db, email, password, password_confirm)
     return new_user
 
 

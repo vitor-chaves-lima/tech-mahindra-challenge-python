@@ -12,6 +12,7 @@ class ErrorMessage(BaseModel):
 class SignUpUserRequestPayload(BaseModel):
     email: EmailStr
     password: Annotated[str,StringConstraints(min_length=8)]
+    password_confirm: Annotated[str,StringConstraints(min_length=8)] = Field(alias="passwordConfirm")
 
 
 class UserResponse(BaseModel):
