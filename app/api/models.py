@@ -1,12 +1,18 @@
-from typing import Union
+from typing import Annotated, Union
 from uuid import UUID
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field, StringConstraints
 from datetime import datetime
 
 
+class ErrorMessage(BaseModel):
+    message: str
+    error: str
+
+
 class SignUpUserRequestPayload(BaseModel):
-    email: str
-    password: str
+    email: EmailStr
+    password: Annotated[str,StringConstraints(min_length=8)]
+
 
 class UserResponse(BaseModel):
     id: UUID
