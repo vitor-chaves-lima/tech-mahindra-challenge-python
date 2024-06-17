@@ -15,6 +15,11 @@ class SignUpUserRequestPayload(BaseModel):
     password_confirm: Annotated[str,StringConstraints(min_length=8)] = Field(alias="passwordConfirm")
 
 
+class SignInUserRequestPayload(BaseModel):
+    email: EmailStr
+    password: Annotated[str,StringConstraints(min_length=8)]
+
+
 class UserResponse(BaseModel):
     id: UUID
     email: str
@@ -23,3 +28,9 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class TokensResponse(BaseModel):
+    accessToken: str = Field(alias="access_token")
+    refreshToken: str = Field(alias="refresh_token")
+    accessTokenExpiresAt: int = Field(alias="access_token_expires_at")
