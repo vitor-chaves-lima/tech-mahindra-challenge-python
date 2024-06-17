@@ -1,4 +1,4 @@
-from typing import Annotated, Union
+from typing import Annotated, List, Union
 from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field, StringConstraints
 from datetime import datetime
@@ -48,3 +48,14 @@ class RefreshResponse(BaseModel):
 class AddPointsRequestPayload(BaseModel):
     user_email: str = Field(alias="userEmail")
     amount: int
+
+
+
+class UserPointEntry(BaseModel):
+    id: UUID
+    amount: int
+    createdAt: datetime = Field(alias="created_at")
+
+
+class GetUserPointsResponse(BaseModel):
+    data: List[UserPointEntry]

@@ -1,3 +1,5 @@
+from typing import List
+import uuid
 from sqlalchemy.orm import Session
 from .schemas import PointEntry, User
 
@@ -26,3 +28,7 @@ class PointEntriesRepository:
         db.add(point_entry)
         db.commit()
         return point_entry
+    
+
+    def get_user_points(db: Session, user_id: uuid.UUID) -> List[PointEntry]:
+        return db.query(PointEntry).filter(PointEntry.user_id == user_id).all()

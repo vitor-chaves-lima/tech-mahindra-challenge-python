@@ -1,10 +1,11 @@
+from typing import List
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from api.models import AddPointsRequestPayload, ErrorMessage, RefreshRequestPayload, RefreshResponse, SignInUserRequestPayload, SignUpUserRequestPayload, SignInResponse, UserResponse
+from api.models import AddPointsRequestPayload, ErrorMessage, GetUserPointsResponse, RefreshRequestPayload, RefreshResponse, SignInUserRequestPayload, SignUpUserRequestPayload, SignInResponse, UserPointEntry, UserResponse
 from api.utils import check_user_role
 from core.controllers.models import UserData
-from core.controllers.points import add_points_controller
+from core.controllers.points import add_points_controller, get_user_points_controller
 from core.controllers.auth import refresh_token_controller, sign_up_controller, sign_in_controller
 from core.db import get_db
 
@@ -66,5 +67,14 @@ async def add_points(request: AddPointsRequestPayload, db: Session = Depends(get
                  status_code=status.HTTP_200_OK, 
                  tags=["Points"])
 async def get_points(db: Session = Depends(get_db), user_data: UserData = Depends(check_user_role)):
-    print(user_data.id)
+    user_id = user_data.id
+    user_points = get_user_points_controller(db, user_id=user_id)
+
+    user_points_response: List[UserPointEntry] = []
+
+    for point in user_points:
+        response_point = UserPointEntry(id=point.id, amount=point.amount, created_at=point.created_at)
+        user_points_response.append(response_point)
+
+    return GetUserPointsResponse(data=user_points_response)
     
