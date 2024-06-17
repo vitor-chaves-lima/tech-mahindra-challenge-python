@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from api.models import ErrorMessage, RefreshRequestPayload, RefreshResponse, SignInUserRequestPayload, SignUpUserRequestPayload, SignInResponse, UserResponse
-from core.controllers.users import refresh_token_controller, sign_up_controller, sign_in_controller
+from core.controllers.auth import refresh_token_controller, sign_up_controller, sign_in_controller
 from core.db import get_db
 
 
