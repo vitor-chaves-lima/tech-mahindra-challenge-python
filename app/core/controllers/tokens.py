@@ -1,7 +1,7 @@
 import jwt
 import datetime
 from datetime import datetime, timedelta, timezone
-from core.exceptions import ExpiredRefreshTokenException, InvalidRefreshTokenException
+from core.exceptions import ExpiredAccessTokenException, ExpiredRefreshTokenException, InvalidAccessTokenException, InvalidRefreshTokenException
 from core.controllers.models import UserData
 
 ACCESS_TOKEN_SECRET = "TEST!@#access"
@@ -52,11 +52,11 @@ def validate_access_token(access_token: str) -> UserData:
         exp = datetime.fromtimestamp(decoded_token["exp"], tz=timezone.utc)
 
         if now > exp:
-            raise ExpiredRefreshTokenException()
+            raise ExpiredAccessTokenException()
 
         return UserData(id=decoded_token['id'], email=decoded_token['email'], role=decoded_token['role'])
 
     except jwt.ExpiredSignatureError:
-        raise ExpiredRefreshTokenException()
+        raise ExpiredAccessTokenException()
     except jwt.InvalidTokenError:
-        raise InvalidRefreshTokenException()
+        raise InvalidAccessTokenException()

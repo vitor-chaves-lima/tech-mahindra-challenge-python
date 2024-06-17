@@ -32,6 +32,14 @@ class InvalidRefreshTokenException(Exception):
     ...
 
 
+class ExpiredAccessTokenException(Exception):
+    ...
+
+
+class InvalidAccessTokenException(Exception):
+    ...
+
+
 class InvalidUserRoleException(Exception):
     def __init__(self, expected_role: UserRole, found_role: UserRole):
         self.expected_role = expected_role

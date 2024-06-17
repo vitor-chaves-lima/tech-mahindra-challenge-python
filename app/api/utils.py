@@ -13,6 +13,13 @@ def validate_token(token: HTTPAuthorizationCredentials = Depends(auth_scheme)) -
     return validate_access_token(token.credentials)
 
 
+def check_admin_role(user_data: UserData = Depends(validate_token)) -> UserData:
+    if(user_data.role != UserRole.admin):
+        raise InvalidUserRoleException(UserRole.admin, user_data.role)
+    
+    return user_data
+
+
 def check_user_role(user_data: UserData = Depends(validate_token)) -> UserData:
     if(user_data.role != UserRole.user):
         raise InvalidUserRoleException(UserRole.user, user_data.role)

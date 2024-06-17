@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from api.models import AddPointsRequestPayload, ErrorMessage, GetUserPointsResponse, RefreshRequestPayload, RefreshResponse, SignInUserRequestPayload, SignUpUserRequestPayload, SignInResponse, UserPointEntry, UserResponse
-from api.utils import check_user_role
+from api.utils import check_admin_role, check_user_role
 from core.controllers.models import UserData
 from core.controllers.points import add_points_controller, get_user_points_controller
 from core.controllers.auth import refresh_token_controller, sign_up_controller, sign_in_controller
@@ -56,7 +56,9 @@ async def refresh_access_token(request: RefreshRequestPayload):
                  status_code=status.HTTP_201_CREATED, 
                  responses={400: {"model": ErrorMessage}},
                  tags=["Points"])
-async def add_points(request: AddPointsRequestPayload, db: Session = Depends(get_db)):
+async def add_points(request: AddPointsRequestPayload, 
+                     db: Session = Depends(get_db),
+                     _: UserData = Depends(check_admin_role)):
     user_email = request.user_email
     amount = request.amount
 
