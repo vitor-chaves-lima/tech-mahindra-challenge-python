@@ -1,11 +1,20 @@
 import datetime
+import enum
 import uuid
 import bcrypt
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Uuid, func
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String, Uuid, func
 from sqlalchemy.orm import relationship
 
 from . import Base
+
+
+class UserRole(enum.Enum):
+    admin = "admin"
+    user = "user"
+
+    def serialize(self):
+        return self.value
 
 
 class User(Base):
@@ -14,6 +23,7 @@ class User(Base):
     id: uuid.UUID = Column(Uuid, primary_key=True, default=uuid.uuid4)
     email = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
+    role =  Column(Enum(UserRole))
     created_at: datetime = Column(DateTime(timezone=True), default=func.now())
     updated_at: datetime = Column(DateTime(timezone=True), nullable=True)
 

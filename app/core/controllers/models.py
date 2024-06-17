@@ -1,4 +1,7 @@
+import uuid
 from pydantic import BaseModel
+
+from core.db.schemas import UserRole
 
 
 class Tokens(BaseModel):
@@ -13,6 +16,15 @@ class Tokens(BaseModel):
 class AccessToken(BaseModel):
     access_token: str
     access_token_expires_at: int
+
+    class Config:
+        frozen = True
+
+    
+class UserData(BaseModel):
+    id: uuid.UUID
+    email: str
+    role: UserRole
 
     class Config:
         frozen = True

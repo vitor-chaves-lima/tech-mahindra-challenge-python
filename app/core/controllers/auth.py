@@ -21,7 +21,7 @@ def sign_up_controller(db: Session, email: str, password: str, password_confirm:
     if email_exists is True:
         raise EmailExistsException(email)
 
-    new_user = User(email=email)
+    new_user = User(email=email, role="user")
     new_user.set_password(password)
     UsersRepository.save(db, new_user)
     return new_user    
@@ -44,8 +44,8 @@ def sign_in_controller(db: Session, email: str, password: str) -> Tokens:
     if valid_credentials is False:
         raise InvalidCredentialsException()
     
-    refresh_token = create_refresh_token({"id": f"{user.id}", "email": user.email})
-    access_token = create_access_token({"id": f"{user.id}", "email": user.email})
+    refresh_token = create_refresh_token({"id": f"{user.id}", "email": user.email, "role": user.role.serialize()})
+    access_token = create_access_token({"id": f"{user.id}", "email": user.email, "role": user.role.serialize()})
     access_token_expire = 900
 
     return Tokens(refresh_token=refresh_token, 

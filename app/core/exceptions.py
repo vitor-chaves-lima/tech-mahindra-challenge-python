@@ -1,3 +1,6 @@
+from core.db.schemas import UserRole
+
+
 class EmailExistsException(Exception):
     def __init__(self, email: str):
         self.email = email
@@ -27,3 +30,9 @@ class ExpiredRefreshTokenException(Exception):
 
 class InvalidRefreshTokenException(Exception):
     ...
+
+
+class InvalidUserRoleException(Exception):
+    def __init__(self, expected_role: UserRole, found_role: UserRole):
+        self.expected_role = expected_role
+        self.found_role = found_role
