@@ -1,8 +1,7 @@
-from typing import Tuple
 from sqlalchemy.orm import Session
 
-from core.controllers.models import Tokens
-from core.controllers.tokens import create_access_token, create_refresh_token
+from core.controllers.models import AccessToken, Tokens
+from core.controllers.tokens import create_access_token, create_refresh_token, validate_refresh_token
 from core.db.schemas import User
 from core.db.repositories import UsersRepository
 from core.exceptions import EmailExistsException, EmailNotFoundException, InvalidPasswordConfirmException, PasswordLengthException, InvalidCredentialsException
@@ -52,3 +51,12 @@ def sign_in_controller(db: Session, email: str, password: str) -> Tokens:
     return Tokens(refresh_token=refresh_token, 
                   access_token=access_token, 
                   access_token_expires_at=access_token_expire)
+
+
+def refresh_token_controller(refresh_token: str) -> AccessToken:
+    validate_refresh_token(refresh_token)
+
+    access_token = create_access_token()
+    access_token_expire = 900
+
+    return AccessToken(access_token=access_token, access_token_expires_at=access_token_expire)

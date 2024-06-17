@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from api.models import ErrorMessage, SignInUserRequestPayload, SignUpUserRequestPayload, TokensResponse, UserResponse
-from core.controllers.users import sign_up_controller, sign_in_controller
+from api.models import ErrorMessage, RefreshRequestPayload, RefreshResponse, SignInUserRequestPayload, SignUpUserRequestPayload, SignInResponse, UserResponse
+from core.controllers.users import refresh_token_controller, sign_up_controller, sign_in_controller
 from core.db import get_db
 
 
@@ -24,7 +24,7 @@ async def sign_up(request: SignUpUserRequestPayload, db: Session = Depends(get_d
 
 @api_router.post("/auth/sign-in", 
                  status_code=status.HTTP_200_OK, 
-                 response_model=TokensResponse,
+                 response_model=SignInResponse,
                  responses={400: {"model": ErrorMessage}})
 async def sign_in(request: SignInUserRequestPayload, db: Session = Depends(get_db)):
     email = request.email
@@ -34,6 +34,12 @@ async def sign_in(request: SignInUserRequestPayload, db: Session = Depends(get_d
     return tokens
 
 
-@api_router.post("/auth/refresh", status_code=status.HTTP_200_OK)
-async def refresh_token(db: Session = Depends(get_db)):
-    ...
+@api_router.post("/auth/refresh", 
+                 status_code=status.HTTP_200_OK, 
+                 response_model=RefreshResponse,
+                 responses={400: {"model": ErrorMessage}})
+async def refresh_access_token(request: RefreshRequestPayload):
+    refresh_token = request.refresh_token
+
+    access_token = refresh_token_controller(refresh_token)
+    return access_token

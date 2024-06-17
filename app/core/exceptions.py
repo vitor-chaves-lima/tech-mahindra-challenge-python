@@ -19,3 +19,11 @@ class InvalidPasswordConfirmException(Exception):
 
 class InvalidCredentialsException(Exception):
     ...
+
+
+class ExpiredRefreshTokenException(Exception):
+    ...
+
+
+class InvalidRefreshTokenException(Exception):
+    ...

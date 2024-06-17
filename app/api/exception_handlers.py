@@ -1,7 +1,7 @@
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
-from core.exceptions import EmailExistsException, EmailNotFoundException, InvalidCredentialsException, PasswordLengthException, InvalidPasswordConfirmException
+from core.exceptions import EmailExistsException, EmailNotFoundException, ExpiredRefreshTokenException, InvalidCredentialsException, InvalidRefreshTokenException, PasswordLengthException, InvalidPasswordConfirmException
 
 
 async def email_exists_exception_handler(_: Request, exc: EmailExistsException):
@@ -48,8 +48,28 @@ async def invalid_credentials_exception_handler(_: Request, exc: InvalidCredenti
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
         content={
-            "message": f"Invalid credentials",
+            "message": "Invalid credentials",
             "error": InvalidCredentialsException.__name__
+        },
+    )
+
+
+async def expired_refresh_token_exception_handler(_: Request, exc: ExpiredRefreshTokenException):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={
+            "message": "Expired refresh token",
+            "error": ExpiredRefreshTokenException.__name__
+        },
+    )
+
+
+async def invalid_refresh_token_exception_handler(_: Request, exc: InvalidRefreshTokenException):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={
+            "message": "Invalid refresh token",
+            "error": InvalidRefreshTokenException.__name__
         },
     )
 
@@ -60,5 +80,7 @@ def get_exception_handlers():
         (PasswordLengthException, password_length_exception_handler),
         (InvalidPasswordConfirmException, invalid_password_confirm_exception_handler),
         (EmailNotFoundException, email_not_found_exception_handler),
-        (InvalidCredentialsException, invalid_credentials_exception_handler)
+        (InvalidCredentialsException, invalid_credentials_exception_handler),
+        (ExpiredRefreshTokenException, expired_refresh_token_exception_handler),
+        (InvalidRefreshTokenException, invalid_refresh_token_exception_handler),
     ]

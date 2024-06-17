@@ -8,3 +8,11 @@ class Tokens(BaseModel):
 
     class Config:
         frozen = True
+
+
+class AccessToken(BaseModel):
+    access_token: str
+    access_token_expires_at: int
+
+    class Config:
+        frozen = True
