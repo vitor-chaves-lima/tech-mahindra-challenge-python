@@ -43,3 +43,8 @@ class RefreshRequestPayload(BaseModel):
 class RefreshResponse(BaseModel):
     accessToken: str = Field(alias="access_token")
     accessTokenExpiresAt: int = Field(alias="access_token_expires_at")
+
+
+class AddPointsRequestPayload(BaseModel):
+    user_email: str = Field(alias="userEmail")
+    amount: int

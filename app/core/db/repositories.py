@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from .schemas import User
+from .schemas import PointEntry, User
 
 
 class UsersRepository:
@@ -18,3 +18,11 @@ class UsersRepository:
         db.add(user)
         db.commit()
         return user
+    
+
+class PointEntriesRepository:
+    @staticmethod
+    def save(db: Session, point_entry: PointEntry) -> User:
+        db.add(point_entry)
+        db.commit()
+        return point_entry

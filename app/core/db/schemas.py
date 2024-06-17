@@ -2,7 +2,8 @@ import datetime
 import uuid
 import bcrypt
 
-from sqlalchemy import Column, DateTime, String, Uuid, func 
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Uuid, func
+from sqlalchemy.orm import relationship
 
 from . import Base
 
@@ -23,3 +24,14 @@ class User(Base):
 
     def check_password(self, password) -> bool:
         return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
+
+
+class PointEntry(Base):
+    __tablename__ = "point_entries"
+
+    id: uuid.UUID = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    amount: int = Column(Integer, nullable=False)
+    user_id: uuid.UUID = Column(ForeignKey('users.id'), nullable=False)
+    created_at: datetime = Column(DateTime(timezone=True), default=func.now())
+
+    user = relationship("User")
