@@ -45,7 +45,7 @@ def sign_in_controller(db: Session, email: str, password: str) -> Tokens:
         raise InvalidCredentialsException()
     
     refresh_token = create_refresh_token({"id": f"{user.id}", "email": user.email})
-    access_token = create_access_token()
+    access_token = create_access_token({"id": f"{user.id}", "email": user.email})
     access_token_expire = 900
 
     return Tokens(refresh_token=refresh_token, 
